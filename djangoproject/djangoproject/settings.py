@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+
 import os
+load_dotenv()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,7 +31,7 @@ SECRET_KEY = 'django-insecure-x=m-hf+5n2=*3#zdqgxi61gdy1u00wx3mg=$^-ag$1rk0zqryv
 DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
-
+IS_PRODUCTION = os.getenv("RENDER") == "true"
 
 # Application definition
 
@@ -85,7 +88,7 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT'),
         'OPTIONS': {
             'ssl': {
-                'ca': os.getenv('pem_content'),
+                'ca': {} if IS_PRODUCTION else None,
             },
         },
     },
