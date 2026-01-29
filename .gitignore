@@ -143,6 +143,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+aiven_ca.pem
+
 
 # Spyder project settings
 .spyderproject
