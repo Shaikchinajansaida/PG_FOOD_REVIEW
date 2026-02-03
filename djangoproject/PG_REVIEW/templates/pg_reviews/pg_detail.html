@@ -1,0 +1,30 @@
+<h1>{{ pg.name }}</h1>
+
+<p><b>Description:</b> {{ pg.description }}</p>
+<p><b>City:</b> {{ pg.city }}</p>
+<p><b>Area:</b> {{ pg.area }}</p>
+<p><b>Address:</b> {{ pg.address }}</p>
+
+<p><b>Rent:</b> ₹{{ pg.monthly_rent }}</p>
+<p><b>Food Available:</b> {{ pg.food_available|yesno:"Yes,No" }}</p>
+
+<p><b>Owner:</b> {{ pg.owner.username }}</p>
+
+<p><b>Average Rating:</b> ⭐ {{ pg.average_rating }}</p>
+
+<hr>
+
+<h2>Reviews</h2>
+
+{% for r in reviews %}
+    <div style="border:1px solid #ccc; padding:10px; margin:10px;">
+        <b>{{ r.user.username }}</b>
+        ⭐ {{ r.rating }}
+        <p>{{ r.comment }}</p>
+        <small>{{ r.created_at }}</small>
+    </div>
+{% empty %}
+    <p>No reviews yet.</p>
+{% endfor %}
+
+<a href="/pgs/">← Back to list</a>
