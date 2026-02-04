@@ -16,6 +16,19 @@
 
 <h2>Reviews</h2>
 
+{% if user.is_authenticated %}
+    <a href="{% url 'review_add' pg.id %}">
+        Add Your Review
+    </a>
+{% else %}
+    <p>
+        <a href="/admin/login/?next={% url 'review_add' pg.id %}">
+            Login to add review
+        </a>
+    </p>
+{% endif %}
+
+
 {% for r in reviews %}
     <div style="border:1px solid #ccc; padding:10px; margin:10px;">
         <b>{{ r.user.username }}</b>
