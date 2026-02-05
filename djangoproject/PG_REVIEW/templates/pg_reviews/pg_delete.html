@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <h2>Delete PG</h2>
+
+  <p>Are you sure you want to delete <b>{{ pg.name }}</b>?</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn">Yes, Delete</button>
+  </form>
+
+  <a href="{% url 'owner_dashboard' %}">Cancel</a>
+</div>
+{% endblock %}

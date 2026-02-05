@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-x=m-hf+5n2=*3#zdqgxi61gdy1u00wx3mg=$^-ag$1rk0zqryv'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 IS_PRODUCTION = os.getenv("RENDER") == "true"
@@ -60,7 +60,7 @@ ROOT_URLCONF = 'djangoproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -128,7 +128,7 @@ USE_TZ = True
 LOGIN_URL = "/admin/login/"
 LOGIN_REDIRECT_URL = "/pgs/"
 
-
+LOGOUT_REDIRECT_URL = "/pgs/"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/

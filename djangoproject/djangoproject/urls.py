@@ -22,4 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path("", include("PG_REVIEW.urls")),
+    path("accounts/", include("django.contrib.auth.urls")),
+    # path("", include("PG_REVIEW.urls")),
 ]

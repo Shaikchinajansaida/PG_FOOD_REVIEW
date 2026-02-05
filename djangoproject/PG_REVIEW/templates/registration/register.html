@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+<h2>Create Account</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    {{ form.username.label }}<br>
+    {{ form.username }}<br><br>
+
+    {{ form.email.label }}<br>
+    {{ form.email }}<br><br>
+
+    {{ form.password1.label }}<br>
+    {{ form.password1 }}<br><br>
+
+    {{ form.password2.label }}<br>
+    {{ form.password2 }}<br><br>
+
+    <hr>
+
+    <label>
+        {{ form.is_owner }} Register as PG Owner
+    </label><br><br>
+
+    Phone (for owners):<br>
+    {{ form.phone }}<br><br>
+
+    <button type="submit">Register</button>
+</form>
+
+</div>
+{% endblock %}

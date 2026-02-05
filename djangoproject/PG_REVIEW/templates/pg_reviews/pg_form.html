@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+  <h2>
+    {% if form.instance.pk %}
+      Edit PG
+    {% else %}
+      Create New PG
+    {% endif %}
+  </h2>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div style="display:grid; gap:12px;">
+      {{ form.as_p }}
+    </div>
+
+    <button type="submit" class="btn">
+      {% if form.instance.pk %}
+        Update PG
+      {% else %}
+        Create PG
+      {% endif %}
+    </button>
+  </form>
+
+  <p style="margin-top:15px;">
+    <a href="{% url 'owner_dashboard' %}">← Back to dashboard</a>
+  </p>
+</div>
+
+{% endblock %}

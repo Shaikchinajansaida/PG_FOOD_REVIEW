@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Owner Dashboard</h2>
+
+<a href="{% url 'pg_create' %}" class="btn">Add New PG</a>
+
+<hr>
+
+{% for pg in pgs %}
+  <div class="card" style="margin:15px 0;">
+    <h3>{{ pg.name }}</h3>
+    <p>{{ pg.city }} — ₹{{ pg.monthly_rent }}</p>
+
+    <a href="{% url 'pg_edit' pg.id %}">Edit</a> |
+    <a href="{% url 'pg_delete' pg.id %}">Delete</a>
+  </div>
+{% empty %}
+  <p>No PGs created yet.</p>
+{% endfor %}
+
+{% endblock %}

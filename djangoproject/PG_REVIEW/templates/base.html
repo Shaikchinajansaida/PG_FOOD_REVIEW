@@ -1,0 +1,202 @@
+{% load static %}
+<!doctype html>
+<html>
+  <head>
+    <title>PG Food Review</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tagesschrift&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #eef2ff, #f8fafc);
+      }
+
+      /* ===== Glass Navbar ===== */
+
+      .navbar {
+        position: sticky;
+        top: 15px;
+        margin: 12px auto;
+        width: 92%;
+        padding: 12px 24px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        border-radius: 18px;
+
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(18px) saturate(160%);
+        -webkit-backdrop-filter: blur(18px);
+
+        border: 1px solid rgba(255, 255, 255, 0.4);
+
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.12),
+          inset 0 1px 0 rgba(255, 255, 255, 0.7);
+
+        transition: all 0.3s ease;
+      }
+
+      .navbar:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          0 14px 40px rgba(0, 0, 0, 0.18),
+          inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      }
+
+      /* ===== Brand / Logo ===== */
+
+      .nav-left {
+        display: flex;
+        align-items: center;
+      }
+
+      .logo {
+        height: 44px;
+        width: auto;
+        border-radius: 12px;
+        filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.18));
+        transition: transform 0.25s ease;
+      }
+
+      .logo:hover {
+        transform: scale(1.06);
+      }
+
+      .brand-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+
+      .brand-text {
+        font-size: 30px;
+        font-weight: 700;
+        font-family: "Tagesschrift", system-ui;
+        font-style: normal;
+        background: linear-gradient(90deg, #111, #666);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* ===== Right Side ===== */
+
+      .nav-right {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .welcome {
+        font-weight: 500;
+        opacity: 0.85;
+      }
+
+      /* ===== Glass Buttons ===== */
+
+      .glass-btn {
+        padding: 8px 16px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+
+        background: rgba(255, 255, 255, 0.35);
+        backdrop-filter: blur(12px);
+
+        text-decoration: none;
+        color: #111;
+        font-weight: 500;
+
+        cursor: pointer;
+        transition: all 0.25s ease;
+      }
+
+      .glass-btn:hover {
+        background: rgba(255, 255, 255, 0.6);
+        transform: translateY(-1px) scale(1.03);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+      }
+
+      /* ===== Content ===== */
+
+      .container {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 10px;
+      }
+
+      .card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      }
+
+      .btn {
+        padding: 10px 14px;
+        background: #273c75;
+        color: white;
+        border-radius: 6px;
+        text-decoration: none;
+      }
+
+      /* ===== Mobile ===== */
+
+      @media (max-width: 600px) {
+        .brand-text {
+          display: none;
+        }
+        .navbar {
+          padding: 10px 14px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ========= NAVBAR ========= -->
+
+    <div class="navbar">
+      <div class="nav-left">
+        <a href="/pgs/" class="brand-wrap">
+          <span class="brand-text">Nestora</span>
+        </a>
+      </div>
+
+      <div class="nav-right">
+
+        {% if user.is_authenticated %}
+        <span class="welcome">Welcome {{ user.username }}</span>
+
+        {% if user.is_authenticated and user.ownerprofile %}
+    <a href="{% url 'owner_dashboard' %}" class="glass-btn">
+        Dashboard
+    </a>
+{% endif %}
+
+        <form method="post" action="{% url 'logout' %}" style="display: inline">
+          {% csrf_token %}
+          <button class="glass-btn" type="submit">Logout</button>
+        </form>
+
+        {% else %}
+        <a href="{% url 'login' %}" class="glass-btn">Login</a>
+        <a href="{% url 'register' %}">Register</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- ========= PAGE CONTENT ========= -->
+
+    <div class="container">{% block content %} {% endblock %}</div>
+  </body>
+</html>
