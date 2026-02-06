@@ -31,6 +31,8 @@ class PG(models.Model):
     monthly_rent = models.PositiveIntegerField()
     food_available = models.BooleanField(default=True)
 
+    image = models.ImageField(upload_to="pg_images/", blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -42,6 +44,18 @@ class PG(models.Model):
         if not reviews:
             return 0
         return round(sum(r.rating for r in reviews) / len(reviews), 2)
+
+class PGImage(models.Model):
+    pg = models.ForeignKey(
+        PG,
+        on_delete=models.CASCADE,
+        related_name="images"
+    )
+    image = models.ImageField(upload_to="pg_images/")
+
+    def __str__(self):
+        return f"Image for {self.pg.name}"
+
 
 
 # -------------------------

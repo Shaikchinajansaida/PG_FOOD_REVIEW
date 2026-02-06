@@ -40,4 +40,5 @@ class PGForm(forms.ModelForm):
             "city",
             "monthly_rent",
             "food_available",
+            "image",
         ]

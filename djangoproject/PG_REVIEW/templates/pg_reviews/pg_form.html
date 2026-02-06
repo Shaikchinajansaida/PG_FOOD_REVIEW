@@ -1,35 +1,121 @@
 {% extends "base.html" %}
-
 {% block content %}
 
-<div class="card">
-  <h2>
-    {% if form.instance.pk %}
-      Edit PG
-    {% else %}
-      Create New PG
-    {% endif %}
-  </h2>
+<style>
 
-  <form method="post">
-    {% csrf_token %}
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+}
 
-    <div style="display:grid; gap:12px;">
-      {{ form.as_p }}
-    </div>
+.form-card {
+  width: 100%;
+  max-width: 720px;
+  background: white;
+  padding: 28px;
+  border-radius: 18px;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+}
 
-    <button type="submit" class="btn">
+.form-title {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.form-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.form-grid label {
+  font-weight: 600;
+}
+
+.form-grid input,
+.form-grid textarea,
+.form-grid select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+.file-box {
+  background: #f1f5f9;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.btn-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.btn-secondary {
+  padding: 10px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.btn-secondary:hover {
+  background: #cbd5e1;
+}
+
+</style>
+
+<div class="form-wrapper">
+
+  <div class="form-card">
+
+    <h2 class="form-title">
       {% if form.instance.pk %}
-        Update PG
+         Edit PG Details
       {% else %}
-        Create PG
+        ➕ Create New PG
       {% endif %}
-    </button>
-  </form>
+    </h2>
 
-  <p style="margin-top:15px;">
-    <a href="{% url 'owner_dashboard' %}">← Back to dashboard</a>
-  </p>
+    <form method="post" enctype="multipart/form-data">
+
+      {% csrf_token %}
+
+      <div class="form-grid">
+        {{ form.as_p }}
+
+        <div class="file-box">
+          <label><b>Upload Gallery Images</b></label><br>
+          <input type="file" name="images" multiple>
+        </div>
+      </div>
+
+      <div class="btn-row">
+
+        <button type="submit" class="btn">
+          {% if form.instance.pk %}
+            Update PG
+          {% else %}
+            Create PG
+          {% endif %}
+        </button>
+
+        <a href="{% url 'owner_dashboard' %}" class="btn-secondary">
+          ← Back to Dashboard
+        </a>
+
+      </div>
+
+    </form>
+
+  </div>
+
 </div>
 
 {% endblock %}

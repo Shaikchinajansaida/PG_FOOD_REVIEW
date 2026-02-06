@@ -6,6 +6,10 @@
 
 {% for pg in pgs %}
     <div class="card" style="margin-bottom:15px;">
+        {% if pg.image %}
+        <img src="{{ pg.image.url }}" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;">
+        {% endif %}
+
         <h2>{{ pg.name }}</h2>
         <p>{{ pg.city }} — {{ pg.area }}</p>
         <p>₹ {{ pg.monthly_rent }}</p>

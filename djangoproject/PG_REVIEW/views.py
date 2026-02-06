@@ -11,6 +11,7 @@ from .forms import ReviewForm, RegisterForm, PGForm
 from .models import OwnerProfile
 from .models import PG, OwnerProfile
 from django.http import HttpResponseForbidden
+from .models import PGImage
 
 
 
@@ -106,18 +107,22 @@ def owner_dashboard(request):
 
 @owner_required
 def pg_edit(request, pg_id):
-
     pg = get_object_or_404(PG, id=pg_id, owner=request.user)
 
-    form = PGForm(request.POST or None, instance=pg)
+    form = PGForm(request.POST or None, request.FILES or None, instance=pg)
 
     if request.method == "POST" and form.is_valid():
-        form.save()
+        pg = form.save()
+
+        # ✅ handle extra images on edit too
+        files = request.FILES.getlist("images")
+        for f in files:
+            PGImage.objects.create(pg=pg, image=f)
+
         return redirect("owner_dashboard")
 
-    return render(request, "pg_reviews/pg_form.html", {
-        "form": form
-    })
+    return render(request, "pg_reviews/pg_form.html", {"form": form})
+
 
 @owner_required
 def pg_delete(request, pg_id):
@@ -135,12 +140,19 @@ def pg_delete(request, pg_id):
 @owner_required
 def pg_create(request):
 
-    form = PGForm(request.POST or None)
+    form = PGForm(request.POST or None, request.FILES or None)
 
     if request.method == "POST" and form.is_valid():
         pg = form.save(commit=False)
         pg.owner = request.user
         pg.save()
+
+        # ✅ handle multiple images
+        files = request.FILES.getlist("images")
+
+        for f in files:
+            PGImage.objects.create(pg=pg, image=f)
+
         return redirect("owner_dashboard")
 
     return render(request, "pg_reviews/pg_form.html", {

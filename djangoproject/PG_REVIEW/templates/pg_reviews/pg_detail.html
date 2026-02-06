@@ -1,37 +1,255 @@
 {% extends "base.html" %}
-
 {% block content %}
 
-<div class="card">
+<style>
 
-<h1>{{ pg.name }}</h1>
+/* ===== Card ===== */
 
-<p>{{ pg.description }}</p>
+.pg-card {
+  background: white;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
 
-<p><b>City:</b> {{ pg.city }}</p>
-<p><b>Area:</b> {{ pg.area }}</p>
-<p><b>Address:</b> {{ pg.address }}</p>
-<p><b>Rent:</b> ₹ {{ pg.monthly_rent }}</p>
+/* ===== Gallery ===== */
 
-<p>⭐ {{ pg.average_rating }}</p>
+.main-img {
+  width: 100%;
+  max-height: 460px;
+  object-fit: cover;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform .25s;
+}
 
-{% if user.is_authenticated %}
-    <a href="{% url 'review_add' pg.id %}" class="btn">
-        Add Review
+.main-img:hover {
+  transform: scale(1.02);
+}
+
+/* thumbnails row */
+
+.thumb-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+  overflow-x: auto;
+}
+
+.thumb {
+  width: 140px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 12px;
+  cursor: pointer;
+  opacity: .8;
+  transition: .2s;
+  border: 2px solid transparent;
+}
+
+.thumb:hover {
+  opacity: 1;
+  transform: translateY(-3px);
+}
+
+.thumb.active {
+  border-color: #1f3a8a;
+  opacity: 1;
+}
+
+/* ===== Info Grid ===== */
+
+.pg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.info-box {
+  background: #f1f5f9;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+/* ===== Buttons ===== */
+
+.btn-main {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 11px 18px;
+  background: #1f3a8a;
+  color: white;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* ===== Reviews ===== */
+
+.review-card {
+  background: white;
+  padding: 16px;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  margin-top: 14px;
+}
+
+/* ===== Fullscreen Modal ===== */
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal img {
+  max-width: 94%;
+  max-height: 94%;
+  border-radius: 14px;
+}
+
+.btn-secondary {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  background: #e2e8f0;
+  color: #0f172a;
+  transition: .2s;
+}
+
+.btn-secondary:hover {
+  background: #cbd5e1;
+}
+
+
+</style>
+
+<!-- ================= CARD ================= -->
+
+<div class="pg-card">
+
+  <!-- ===== MAIN IMAGE ===== -->
+
+  {% if pg.image %}
+    <img id="mainImage"
+         src="{{ pg.image.url }}"
+         class="main-img"
+         onclick="openModal(this.src)">
+  {% elif pg.images.first %}
+    <img id="mainImage"
+         src="{{ pg.images.first.image.url }}"
+         class="main-img"
+         onclick="openModal(this.src)">
+  {% endif %}
+
+  <!-- ===== THUMBNAILS ===== -->
+
+  <div class="thumb-row">
+
+    {% if pg.image %}
+      <img src="{{ pg.image.url }}"
+           class="thumb active"
+           onclick="setMain(this)">
+    {% endif %}
+
+    {% for img in pg.images.all %}
+      <img src="{{ img.image.url }}"
+           class="thumb"
+           onclick="setMain(this)">
+    {% endfor %}
+
+  </div>
+
+  <!-- ===== TITLE ===== -->
+
+  <h1 style="margin-top:18px;">{{ pg.name }}</h1>
+  <p style="opacity:.8">{{ pg.description }}</p>
+
+  <!-- ===== GRID ===== -->
+
+  <div class="pg-grid">
+    <div class="info-box"><b>City</b><br>{{ pg.city }}</div>
+    <div class="info-box"><b>Area</b><br>{{ pg.area }}</div>
+    <div class="info-box"><b>Rent</b><br>₹ {{ pg.monthly_rent }}</div>
+    <div class="info-box"><b>Food</b><br>{{ pg.food_available|yesno:"Available,Not Available" }}</div>
+    <div class="info-box"><b>Rating</b><br>⭐ {{ pg.average_rating }}</div>
+    <div class="info-box"><b>Owner</b><br>{{ pg.owner.username }}</div>
+  </div>
+
+  <div style="margin-top:12px;">
+    <b>Address:</b> {{ pg.address }}
+  </div>
+
+  <!-- ===== REVIEW BUTTON ===== -->
+
+  {% if user.is_authenticated %}
+    <a href="{% url 'review_add' pg.id %}" class="btn-main">
+      Add Review
     </a>
-{% endif %}
+  {% else %}
+    <a href="{% url 'login' %}?next={% url 'pg_detail' pg.id %}"
+       class="btn-main">
+      Login to Review
+    </a>
+  {% endif %}
 
 </div>
 
-<h2>Reviews</h2>
+<!-- ================= REVIEWS ================= -->
+
+<h2 style="margin-top:30px;">Reviews</h2>
 
 {% for r in reviews %}
-<div class="card" style="margin-top:10px;">
+  <div class="review-card">
     <b>{{ r.user.username }}</b> ⭐ {{ r.rating }}
     <p>{{ r.comment }}</p>
-</div>
+    <small style="opacity:.6">{{ r.created_at }}</small>
+  </div>
 {% empty %}
-<p>No reviews yet.</p>
+  <p>No reviews yet.</p>
 {% endfor %}
+
+<a href="{% url 'pg_list' %}" class="btn-secondary">
+  ← Back to list
+</a>
+
+
+<!-- ================= MODAL ================= -->
+
+<div id="imgModal" class="modal" onclick="closeModal()">
+  <img id="modalImg">
+</div>
+
+<!-- ================= JS ================= -->
+
+<script>
+
+function setMain(el) {
+  document.getElementById("mainImage").src = el.src
+
+  document.querySelectorAll(".thumb")
+    .forEach(t => t.classList.remove("active"))
+
+  el.classList.add("active")
+}
+
+function openModal(src) {
+  document.getElementById("imgModal").style.display = "flex"
+  document.getElementById("modalImg").src = src
+}
+
+function closeModal() {
+  document.getElementById("imgModal").style.display = "none"
+}
+
+</script>
 
 {% endblock %}
