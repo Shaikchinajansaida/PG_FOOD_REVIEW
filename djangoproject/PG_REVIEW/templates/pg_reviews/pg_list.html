@@ -1,26 +1,205 @@
 {% extends "base.html" %}
-
 {% block content %}
 
-<h1>PG & Hotel Listings</h1>
+<style>
+
+/* ===== Hero Section ===== */
+
+.hero {
+  text-align: center;
+  margin: 30px 0 40px;
+}
+
+.hero-block {
+  text-align:center;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.hero-title {
+  font-size: 88px;
+  font-family: cursive;
+  margin: 0;
+}
+
+.hero-sub {
+  font-size: 18px;
+  opacity: .8;
+  max-width: 900px;
+  margin: 10px auto 0;
+}
+
+/* fade system */
+
+.fade-on-view {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all .8s ease;
+  /* transition: opacity 1s ease, transform 1s cubic-bezier(.16,1,.3,1); */
+
+}
+
+.fade-on-view.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+
+
+
+.hero-sub {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 16px;
+  opacity: .75;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+/* ===== Grid ===== */
+
+.pg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 22px;
+  margin-top: 30px;
+}
+
+/* ===== Card Upgrade ===== */
+
+.pg-card {
+  background: white;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(0,0,0,.08);
+  transition: .25s;
+}
+
+.pg-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0,0,0,.12);
+}
+
+.pg-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.pg-body {
+  padding: 16px 18px 20px;
+}
+
+.pg-name {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.pg-meta {
+  font-size: 14px;
+  opacity: .75;
+  margin-bottom: 8px;
+}
+
+.pg-rent {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.pg-rating {
+  margin-bottom: 12px;
+}
+
+/* ===== Button ===== */
+
+.btn-view {
+  display: inline-block;
+  padding: 10px 16px;
+  background: #1f3a8a;
+  color: white;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.btn-view:hover {
+  opacity: .9;
+}
+
+</style>
+
+<!-- ================= HERO ================= -->
+
+<div class="hero-block ">
+
+  <h1 class="hero-title fade-on-view">
+    Welcome To Nestora
+  </h1>
+
+  <p class="hero-sub">
+    Your trusted platform for finding the perfect PG accommodations.
+    Treat your home away from home with our curated selection of premium PGs.
+  </p>
+
+</div>
+
+<!-- ================= GRID ================= -->
+
+<div class="pg-grid">
 
 {% for pg in pgs %}
-    <div class="card" style="margin-bottom:15px;">
-        {% if pg.image %}
-        <img src="{{ pg.image.url }}" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;">
-        {% endif %}
+  <div class="pg-card">
 
-        <h2>{{ pg.name }}</h2>
-        <p>{{ pg.city }} — {{ pg.area }}</p>
-        <p>₹ {{ pg.monthly_rent }}</p>
-        <p>⭐ {{ pg.average_rating }}</p>
+    {% if pg.image %}
+      <img src="{{ pg.image.url }}" class="pg-img">
+    {% endif %}
 
-        <a href="{% url 'pg_detail' pg.id %}" class="btn">
-            View Details
-        </a>
+    <div class="pg-body">
+
+      <div class="pg-name">{{ pg.name }}</div>
+
+      <div class="pg-meta">
+        {{ pg.city }} — {{ pg.area }}
+      </div>
+
+      <div class="pg-rent">₹ {{ pg.monthly_rent }}</div>
+
+      <div class="pg-rating">
+        ⭐ {{ pg.average_rating }}
+      </div>
+
+      <a href="{% url 'pg_detail' pg.id %}" class="btn-view">
+        View Details
+      </a>
+
     </div>
+  </div>
+
 {% empty %}
-    <p>No PGs listed yet.</p>
+  <p>No PGs listed yet.</p>
 {% endfor %}
+
+</div>
+
+<script>
+
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add("visible");
+    } else {
+      entry.target.classList.remove("visible"); // fade again when scrolling back
+    }
+  });
+},{
+  threshold: 0.35
+});
+
+document.querySelectorAll(".fade-on-view")
+  .forEach(el => observer.observe(el));
+
+</script>
+
 
 {% endblock %}

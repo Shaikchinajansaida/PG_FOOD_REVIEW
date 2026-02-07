@@ -1,35 +1,177 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="card">
-<h2>Create Account</h2>
 
-<form method="post">
-    {% csrf_token %}
+<style>
 
-    {{ form.username.label }}<br>
-    {{ form.username }}<br><br>
+/* ===== Center Wrapper ===== */
 
-    {{ form.email.label }}<br>
-    {{ form.email }}<br><br>
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 72vh;
+}
 
-    {{ form.password1.label }}<br>
-    {{ form.password1 }}<br><br>
+/* ===== Card ===== */
 
-    {{ form.password2.label }}<br>
-    {{ form.password2 }}<br><br>
+.form-card {
+  width: 100%;
+  max-width: 560px;
+  background: white;
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 12px 38px rgba(0,0,0,0.08);
+}
 
-    <hr>
+/* ===== Title ===== */
 
-    <label>
-        {{ form.is_owner }} Register as PG Owner
-    </label><br><br>
+.form-title {
+  text-align: center;
+  margin-bottom: 22px;
+}
 
-    Phone (for owners):<br>
-    {{ form.phone }}<br><br>
+/* ===== Grid ===== */
 
-    <button type="submit">Register</button>
-</form>
+.form-grid {
+  display: grid;
+  gap: 14px;
+}
+
+/* ===== Inputs ===== */
+
+.form-grid label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.form-grid input {
+  width: 100%;
+  padding: 11px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  transition: .2s;
+}
+
+.form-grid input:focus {
+  outline: none;
+  border-color: #1f3a8a;
+  box-shadow: 0 0 0 3px rgba(31,58,138,.12);
+}
+
+/* ===== Checkbox Row ===== */
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.checkbox-row input {
+  width: 18px;
+  height: 18px;
+}
+
+/* ===== Buttons ===== */
+
+.btn-row {
+  margin-top: 18px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-main {
+  padding: 11px 18px;
+  background: #1f3a8a;
+  color: white;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-main:hover {
+  opacity: .92;
+}
+
+.btn-secondary {
+  padding: 11px 18px;
+  border-radius: 12px;
+  text-decoration: none;
+  background: #e2e8f0;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.btn-secondary:hover {
+  background: #cbd5e1;
+}
+
+.login-note {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+  opacity: .8;
+}
+
+</style>
+
+<div class="form-wrapper">
+
+  <div class="form-card">
+
+    <h2 class="form-title">Create Your Account</h2>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="form-grid">
+
+        <label>Username</label>
+        {{ form.username }}
+
+        <label>Email</label>
+        {{ form.email }}
+
+        <label>Password</label>
+        {{ form.password1 }}
+
+        <label>Confirm Password</label>
+        {{ form.password2 }}
+
+        <div class="checkbox-row">
+          {{ form.is_owner }}
+          <span>Register as PG Owner</span>
+        </div>
+
+        <label>Phone (only for owners)</label>
+        {{ form.phone }}
+
+      </div>
+
+      <div class="btn-row">
+        <button type="submit" class="btn-main">
+          Register Account
+        </button>
+
+        <a href="{% url 'login' %}" class="btn-secondary">
+          Login Instead
+        </a>
+      </div>
+
+    </form>
+
+    <div class="login-note">
+      Already have an account? Login above.
+    </div>
+
+  </div>
 
 </div>
+
 {% endblock %}

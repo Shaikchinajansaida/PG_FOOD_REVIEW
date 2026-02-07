@@ -1,9 +1,95 @@
-<h2>Add Review for {{ pg.name }}</h2>
+{% extends "base.html" %}
+{% block content %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit Review</button>
-</form>
+<style>
+.form-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
 
-<a href="{% url 'pg_detail' pg.id %}">Cancel</a>
+.form-card {
+  width: 100%;
+  max-width: 520px;
+  background: white;
+  padding: 26px;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.form-card form p {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.form-card input,
+.form-card textarea,
+.form-card select {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.btn-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.btn-main {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  background: #1f3a8a;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  padding: 10px 18px;
+  border-radius: 10px;
+  text-decoration: none;
+  background: #e5e7eb;
+  color: #111;
+  font-weight: 600;
+}
+</style>
+
+<div class="form-wrap">
+
+  <div class="form-card">
+
+    <h2 class="form-title">
+      Add Review for {{ pg.name }}
+    </h2>
+
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <div class="btn-row">
+        <button type="submit" class="btn-main">
+          Submit Review
+        </button>
+
+        <a href="{% url 'pg_detail' pg.id %}" class="btn-secondary">
+          Cancel
+        </a>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+
+{% endblock %}

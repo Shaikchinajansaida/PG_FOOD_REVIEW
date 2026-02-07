@@ -18,7 +18,7 @@ from .models import PGImage
 
 # Create your views here.
 def index(request):
-    return HttpResponse("Hello, welcome to the PG Food Review App!")
+    return redirect("pg_list")
 
 
 def pg_list(request):
