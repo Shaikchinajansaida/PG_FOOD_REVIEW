@@ -126,6 +126,70 @@
 .btn-view:hover {
   opacity: .9;
 }
+/* ===== PARALLAX HERO ===== */
+
+.hero-parallax {
+  height: 60vh;
+  background-image: url("/media/pg_images/upscaleBackgroundimg.jpg"); /* change image */
+  background-size: cover;
+  border-radius: 20px;
+  background-position: center;
+  background-attachment: fixed;   /* ⭐ magic line */
+  display: flex;
+  align-items: center;
+  padding-left: 8%;
+  margin-bottom: 40px;
+  margin-top: 20px;
+}
+
+/* dark card */
+
+.hero-overlay-card {
+  background: rgba(0,0,0,0.88);
+  color: white;
+  max-width: 520px;
+  padding: 36px;
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.4);
+}
+
+.hero-label {
+  font-size: 12px;
+  letter-spacing: 2px;
+  opacity: .7;
+  margin-bottom: 14px;
+}
+
+.hero-overlay-card h2 {
+  font-size: 34px;
+  margin: 0 0 16px;
+  line-height: 1.25;
+}
+
+.hero-overlay-card p {
+  opacity: .85;
+  line-height: 1.6;
+  margin-bottom: 22px;
+}
+
+/* button */
+
+.hero-btn {
+  display: inline-block;
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: 1px solid white;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  transition: .2s;
+}
+
+.hero-btn:hover {
+  background: white;
+  color: black;
+}
+
 
 </style>
 
@@ -146,7 +210,7 @@
 
 <!-- ================= GRID ================= -->
 
-<div class="pg-grid">
+<div class="pg-grid" id="pg-list">
 
 {% for pg in pgs %}
   <div class="pg-card">
@@ -181,6 +245,33 @@
 {% endfor %}
 
 </div>
+
+  <!-- ===== HERO PARALLAX ===== -->
+<section class="hero-parallax">
+
+  <div class="hero-overlay-card">
+
+    <div class="hero-label">WHY NESTORA</div>
+
+    <h2>
+      A smarter way to find <br>
+      your perfect PG stay
+    </h2>
+
+    <p>
+      Discover verified PG accommodations with real reviews,
+      transparent pricing, food options, and image galleries —
+      all in one place.
+    </p>
+
+    <a href="#pg-list" class="hero-btn">
+      Browse PGs →
+    </a>
+
+  </div>
+
+</section>
+
 
 <script>
 
