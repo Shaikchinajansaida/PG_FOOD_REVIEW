@@ -56,6 +56,41 @@
   margin: 0 auto;
 }
 
+.filter-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+  gap: 12px;
+  background: white;
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.06);
+  margin-bottom: 24px;
+}
+
+.filter-bar input,
+.filter-bar select {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+.btn-secondary {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 600;
+  background: #e2e8f0;
+  color: #0f172a;
+  transition: .2s;
+}
+
+.btn-secondary:hover {
+  background: #cbd5e1;
+}
+
 /* ===== Grid ===== */
 
 .pg-grid {
@@ -121,11 +156,14 @@
   border-radius: 12px;
   text-decoration: none;
   font-weight: 600;
+  cursor: pointer;
+  border: 1px solid black;
 }
 
 .btn-view:hover {
-  opacity: .9;
+  opacity: 0.8;
 }
+
 /* ===== PARALLAX HERO ===== */
 
 .hero-parallax {
@@ -197,7 +235,7 @@
 
 <div class="hero-block ">
 
-  <h1 class="hero-title fade-on-view">
+  <h1 class="hero-title fade-on-view" id="formbar">
     Welcome To Nestora
   </h1>
 
@@ -207,6 +245,45 @@
   </p>
 
 </div>
+
+<form method="get" class="filter-bar">
+
+  <!-- SEARCH -->
+  <input type="text" name="q"
+         placeholder="Search by name, city, area..."
+         value="{{ request.GET.q }}">
+
+  <!-- PRICE -->
+  <input type="number" name="min_price"
+         placeholder="Min Rent">
+
+  <input type="number" name="max_price"
+         placeholder="Max Rent">
+
+  <!-- AVAILABILITY -->
+  <select name="availability">
+    <option value="">Availability</option>
+    <option value="immediate">Immediate</option>
+    <option value="15">Within 15 Days</option>
+    <option value="30">Within 30 Days</option>
+    <option value="later">After 30 Days</option>
+  </select>
+
+  <!-- TENANT -->
+  <select name="tenant">
+    <option value="">Tenant Type</option>
+    <option value="family">Family</option>
+    <option value="bachelor_male">Bachelor Male</option>
+    <option value="bachelor_female">Bachelor Female</option>
+    <option value="company">Company</option>
+  </select>
+
+  <button type="submit" class="btn-view">Apply</button>
+
+  <a href="{% url 'pg_list' %}" class="btn-secondary">Reset</a>
+
+</form>
+
 
 <!-- ================= GRID ================= -->
 
@@ -264,7 +341,7 @@
       all in one place.
     </p>
 
-    <a href="#pg-list" class="hero-btn">
+    <a href="#formbar" class="hero-btn">
       Browse PGs →
     </a>
 

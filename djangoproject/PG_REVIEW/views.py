@@ -1,19 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponse
-from .models import PG
-from django.shortcuts import redirect
-from .forms import ReviewForm
-from .models import PG, Review
 from django.contrib.auth import login
+from django.db.models import Q
+
+from .models import PG, Review, OwnerProfile, PGImage
 from .forms import ReviewForm, RegisterForm, PGForm
-from .models import OwnerProfile
-from .models import PG, OwnerProfile
-from django.http import HttpResponseForbidden
-from .models import PGImage
-
-
 
 
 # Create your views here.
@@ -23,6 +15,34 @@ def index(request):
 
 def pg_list(request):
     pgs = PG.objects.all().order_by("-created_at")
+
+    q = request.GET.get("q")
+    if q:
+        pgs = pgs.filter(
+            Q(name__icontains=q) |
+            Q(city__icontains=q) |
+            Q(area__icontains=q)
+        )
+
+    # -------- PRICE RANGE --------
+    min_price = request.GET.get("min_price")
+    max_price = request.GET.get("max_price")
+
+    if min_price:
+        pgs = pgs.filter(monthly_rent__gte=min_price)
+
+    if max_price:
+        pgs = pgs.filter(monthly_rent__lte=max_price)
+
+    # -------- AVAILABILITY --------
+    avail = request.GET.get("availability")
+    if avail:
+        pgs = pgs.filter(availability=avail)
+
+    # -------- TENANT TYPE --------
+    tenant = request.GET.get("tenant")
+    if tenant:
+        pgs = pgs.filter(tenant_type=tenant)
 
     return render(request, "pg_reviews/pg_list.html", {
         "pgs": pgs
@@ -71,7 +91,7 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
 
-            # ✅ create owner profile if selected
+            #  create owner profile if selected
             if form.cleaned_data.get("is_owner"):
                 OwnerProfile.objects.create(
                     user=user,
@@ -114,7 +134,7 @@ def pg_edit(request, pg_id):
     if request.method == "POST" and form.is_valid():
         pg = form.save()
 
-        # ✅ handle extra images on edit too
+        #  handle extra images on edit too
         files = request.FILES.getlist("images")
         for f in files:
             PGImage.objects.create(pg=pg, image=f)
@@ -147,7 +167,7 @@ def pg_create(request):
         pg.owner = request.user
         pg.save()
 
-        # ✅ handle multiple images
+        #  handle multiple images
         files = request.FILES.getlist("images")
 
         for f in files:

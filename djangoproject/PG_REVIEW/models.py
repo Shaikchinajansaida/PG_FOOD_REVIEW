@@ -18,6 +18,21 @@ class OwnerProfile(models.Model):
 # -------------------------
 # PG / Hotel Listing
 # -------------------------
+
+TENANT_CHOICES = [
+    ("family", "Family"),
+    ("bachelor_male", "Bachelor Male"),
+    ("bachelor_female", "Bachelor Female"),
+    ("company", "Company"),
+]
+
+AVAIL_CHOICES = [
+    ("immediate", "Immediate"),
+    ("15", "Within 15 Days"),
+    ("30", "Within 30 Days"),
+    ("later", "After 30 Days"),
+]
+
 class PG(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="pgs")
 
@@ -34,6 +49,18 @@ class PG(models.Model):
     image = models.ImageField(upload_to="pg_images/", blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+    availability = models.CharField(
+        max_length=20,
+        choices=AVAIL_CHOICES,
+        blank=True
+    )
+
+    tenant_type = models.CharField(
+        max_length=30,
+        choices=TENANT_CHOICES,
+        blank=True
+    )
 
     def __str__(self):
         return self.name
